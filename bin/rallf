@@ -1,0 +1,29 @@
+#!/usr/bin/env python3
+
+from docopt import docopt
+
+
+class TopLevelCommand(object):
+    """Rallf CLI.
+
+    Usage:
+      rallf login [<username> [--pass-from-stdin]]
+      rallf skill (add|remove) <task_name>
+      rallf device (add|remove) <docker_image> [--driver=<drive>] [--port=<port>]
+      rallf (-h | --help)
+      rallf --version
+
+    Options:
+      --port=<port>       Tcp port to connect to, default: --port=4444
+      --driver=<driver>   Driver name, default: --driver='selenium'.
+      -h --help           Show this screen.
+      --version           Show version.
+
+    """
+    def __init__(self):
+        pass
+
+
+if __name__ == '__main__':
+    arguments = docopt(TopLevelCommand.__doc__, version='Rallf CLI 1.0')
+    print(arguments)
