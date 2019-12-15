@@ -10,7 +10,7 @@ class RallfCLI(object):
       rallf login [--username <username>] [--password <password>]
       rallf incubator (start | stop) [--persistent]
       rallf robot ls
-      rallf robot create
+      rallf robot (create | delete)
       rallf robot (skill | device) (add | remove) <docker_image> --robot <robot>
       rallf device (install | uninstall) <docker_image> [--driver <driver>] [--port <port>]
       rallf --help
@@ -32,5 +32,5 @@ class RallfCLI(object):
 
 
 if __name__ == '__main__':
-    tlc = RallfCLI()
-    print(tlc.arguments)
+    cli = RallfCLI()
+    print(cli.arguments)
