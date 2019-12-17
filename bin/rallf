@@ -2,35 +2,7 @@
 
 from docopt import docopt
 
-
-class RallfCLI(object):
-    """Rallf CLI.
-
-    Usage:
-      rallf login [--username <username>] [--password <password>]
-      rallf incubator (start | stop) [--persistent]
-      rallf robot ls
-      rallf robot (create | delete)
-      rallf robot (skill | device) (add | remove) <docker_image> --robot <robot>
-      rallf device (install | uninstall) <docker_image> [--driver <driver>] [--port <port>]
-      rallf --help
-      rallf --version
-
-    Options:
-      -r, --robot <robot>        Robot to use
-      -u, --username <username>  rallf.com username
-      -p, --password <password>  rallf.com password or - to get it from stdin
-      --persistent               Keep the action persistent across restarts
-      --port <port>              TCP port to connect to, [default: 4444]
-      -d, --driver <driver>      Driver name [default: selenium]
-      -h, --help                 Show this screen.
-      -v, --version              Show version.
-
-    """
-    def __init__(self):
-        self.arguments = docopt(str(self.__doc__), version='Rallf CLI 1.0')
-
+from src.cli.cli import RallfCLI
 
 if __name__ == '__main__':
-    cli = RallfCLI()
-    print(cli.arguments)
+    arguments = docopt(str(RallfCLI.__doc__), version=RallfCLI.version)
