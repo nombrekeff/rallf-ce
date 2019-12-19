@@ -1,5 +1,5 @@
+from src.model.object import Object
 
-class Task:
-    def __init__(self):
-        pass
 
+class Task(Object):
+    pass

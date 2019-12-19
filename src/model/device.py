@@ -1,7 +1,5 @@
 from src.model.object import Object
 
 
-class Robot(Object):
+class Device(Object):
     pass
-
-
