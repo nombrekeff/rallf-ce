@@ -1,4 +1,5 @@
 import json
+import os
 
 import docker
 from werkzeug.wrappers import Request, Response
@@ -20,7 +21,9 @@ class Daemon:
     def __init__(self):
         # TODO:
         #   * load data from config volume
-        with open(self.config_file, 'r') as f:
+        file = self.config_file
+        if os.path.isfile(file): file += '.dist'
+        with open(file, 'r') as f:
             config = json.load(f)
             self.robots = config['robots']
             self.devices = config['devices']
