@@ -1,3 +1,13 @@
 FROM debian:buster
+ENV DEBIAN_FRONTEND noninteractive
 
-CMD ["sleep", "100"]
+RUN apt update && apt install -y python3 python3-pip
+
+RUN pip3 install docker
+RUN pip3 install werkzeug
+RUN pip3 install json-rpc
+
+COPY . /incubator
+WORKDIR /incubator
+
+CMD ["/usr/bin/python3", "/incubator/server.py"]

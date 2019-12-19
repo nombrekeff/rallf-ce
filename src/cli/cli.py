@@ -2,14 +2,15 @@ from docker import DockerClient
 from docopt import docopt
 
 
-class RallfCLI(object):
+class CLI(object):
     """Rallf CLI.
 
     Usage:
       rallf login [--username <username>] [--password <password>]
-      rallf incubator (start | stop) [--persistent] [--endpoint <docker_endpoint>]
+      rallf incubator (start | stop) [--endpoint <docker_endpoint>] [--persistent]
       rallf robot ls
-      rallf robot (create | delete)
+      rallf robot create [--faker]
+      rallf robot delete --robot <robot>
       rallf robot (skill | device) (add | remove) <docker_image> --robot <robot>
       rallf device (install | uninstall) <docker_image> [--driver <driver>] [--port <port>]
       rallf --help
@@ -37,6 +38,9 @@ class RallfCLI(object):
     def __init__(self, client: DockerClient):
         self.docker = client
         self.docker.volumes.create(name=self.config_volume, driver='local')
+
+    def cli(self, arguments):
+        print(arguments)
 
     def start_incubator(self):
         volumes = {

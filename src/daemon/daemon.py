@@ -1,10 +1,8 @@
+import json
+
 import docker
 from werkzeug.wrappers import Request, Response
-from werkzeug.serving import run_simple
-
 from jsonrpc import JSONRPCResponseManager, dispatcher
-
-from src.scheduler.scheduler import Scheduler
 
 #   TODO:
 #       * handle commands from cli (jsonrpc)
@@ -12,17 +10,47 @@ from src.scheduler.scheduler import Scheduler
 #           * robots data (list of robots in directories)
 #           * devices data (list of installed devices as docker images)
 #       * ...
+from src.model.robot import Robot
 
 
 class Daemon:
-    def __init__(self, task_manager, robot_manager, device_manager):
-        self.device_manager = device_manager
-        self.robot_manager = robot_manager
-        self.scheduler = task_manager
+
+    config_file = '../config/daemon.json'
+
+    def __init__(self):
+        # TODO:
+        #   * load data from config volume
+        with open(self.config_file, 'r') as f:
+            config = json.load(f)
+            self.robots = config['robots']
+            self.devices = config['devices']
+
+    def persist(self):
+        config = {
+            'robots': self.robots,
+            'devices': self.devices
+        }
+        with open(self.config_file, 'w') as f:
+            json.dump(config, f)
+
+    def robot(self, action, id=None):
+        if action == "create":
+            robot = Robot()
+            self.robots[id] = robot
+            return robot
+        elif action == "delete" and id is not None:
+            if id in self.robots.keys():
+                del self.robots[id]
+        elif action == "ls":
+            return self.robots
+
+    @dispatcher.add_method
+    def robot_rpc(self, **kwargs):
+        return kwargs["username"] + kwargs["password"]
 
     @dispatcher.add_method
     def login(self, **kwargs):
-        return kwargs["foo"] + kwargs["bar"]
+        return kwargs["username"] + kwargs["password"]
 
     @Request.application
     def application(self, request):
@@ -34,9 +62,3 @@ class Daemon:
             request.data, dispatcher
         )
         return Response(response.json, mimetype='application/json')
-
-
-if __name__ == '__main__':
-    scheduler = Scheduler(docker.from_env())
-    daemon = Daemon(scheduler, robot_manager, device_manager)
-    run_simple('localhost', 4000, daemon.application)

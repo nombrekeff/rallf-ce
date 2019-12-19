@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
-
+import docker
 from docopt import docopt
 
-from src.cli.cli import RallfCLI
+from ..src.cli.cli import CLI
 
 if __name__ == '__main__':
-    arguments = docopt(str(RallfCLI.__doc__), version=RallfCLI.version)
+    cli = CLI(docker.from_env())
+    arguments = docopt(str(cli.__doc__), version=cli.version)
+    cli.cli(arguments)
+
