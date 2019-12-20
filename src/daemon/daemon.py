@@ -60,13 +60,13 @@ class Daemon:
         elif action == "ls":
             return [r for r in self.robots]
 
-    def skill(self, action, skill=None):
-        if action == "create":
-            t = Task()
-            self.skills.append(t)
-            self.task_scheduler.start(t)
+    def skill(self, action, img, robot: Robot, skill=None):
+        if action == "train":
+            t = Task(img=img)
+            robot.learn(t)
+            self.task_scheduler.start(t, robot)
             return t
-        elif action == "delete" and skill is not None:
+        elif action == "forget" and skill is not None:
             self.skills.remove(skill)
         elif action == "ls":
             return [t for t in self.skills]
