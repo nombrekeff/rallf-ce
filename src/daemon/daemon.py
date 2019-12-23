@@ -50,26 +50,41 @@ class Daemon:
         with open(self.config_file, 'w') as f:
             json.dump(config, f, default=lambda x: x.__dict__)
 
-    def robot(self, action, robot=None):
-        if action == "create":
-            r = Robot()
-            self.robots.append(r)
-            return r
-        elif action == "delete" and robot is not None:
-            self.robots.remove(robot)
-        elif action == "ls":
-            return [r for r in self.robots]
+    def robot_create(self) -> Robot:
+        r = Robot()
+        self.robots.append(r)
+        return r
 
-    def skill(self, action, img, robot: Robot, skill=None):
-        if action == "train":
-            t = Task(img=img)
-            robot.learn(t)
-            self.task_scheduler.start(t, robot)
-            return t
-        elif action == "forget" and skill is not None:
-            self.skills.remove(skill)
-        elif action == "ls":
-            return [t for t in self.skills]
+    def robot_delete(self, robot: Robot):
+        robot.die()
+        self.robots.remove(robot)
+
+    def robot_list(self):
+        return [r for r in self.robots]
+
+    def skill_train(self, img, robot: Robot) -> Task:
+        t = Task(img=img)
+        robot.learn(t)
+        return t
+
+    def skill_delete(self, skill: Task, robot: Robot) -> None:
+        robot.forget(skill)
+        self.task_scheduler.stop(skill)
+
+    def skill_list(self, robot: Robot) -> list:
+        return robot.skills[:]
+
+    def device_install(self, img, driver, port) -> Device:
+        d = Device(img=img)
+        self.devices.append(d)
+        return d
+
+    def device_uninstall(self, device: Device) -> None:
+        self.devices.remove(device)
+
+    def device_list(self, device: Device) -> list:
+        return self.devices[:]
+
 
     @dispatcher.add_method
     def robot_rpc(self, **kwargs):

@@ -11,7 +11,8 @@ class CLI(object):
       rallf robot ls
       rallf robot create [--faker]
       rallf robot delete --robot <robot>
-      rallf robot (skill | device) (add | remove) <docker_image> --robot <robot>
+      rallf robot skill (learn | forget) <docker_image> --robot <robot>
+      rallf robot device (add | remove) <docker_image> --robot <robot>
       rallf device (install | uninstall) <docker_image> [--driver <driver>] [--port <port>]
       rallf --help
       rallf --version

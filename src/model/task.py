@@ -8,3 +8,6 @@ class Task(Object):
     def __init__(self, img=None, id=None):
         super().__init__(id)
         self.img = img
+
+    def run(self):
+        pass

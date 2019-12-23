@@ -3,7 +3,7 @@ from src.model.task import Task
 from src.scheduler.scheduler import Scheduler
 
 
-class TaskScheduler(Scheduler):
+class TaskScheduler:
 
     def start(self, task: Task, robot: Robot):
         volumes = {robot.home: {"bind": "/home/robot", "mode": "rw"}}
