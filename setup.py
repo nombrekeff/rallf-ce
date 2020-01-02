@@ -35,5 +35,5 @@ setuptools.setup(
             "Topic :: Software Development :: Testing :: Mocking",
             "Topic :: Software Development :: Testing :: Traffic Generation"
       ],
-      install_requires=[pkg.strip() for pkg in open("requirements.txt").readlines() if len(pkg) > 1]
+      install_requires=[line.strip() for line in open("requirements.txt").readlines() if len(line) > 1]
 )

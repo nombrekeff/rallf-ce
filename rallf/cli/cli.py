@@ -28,7 +28,7 @@ class CLI(object):
       -v, --version                      Show version.
 
     """
-    version = 'Rallf CLI 1.0'
+    version = 'Rallf CLI 0.0.1'
 
     config_volume = 'rallf_config'
     docker_endpoint = '/var/run/docker.sock'
@@ -39,8 +39,21 @@ class CLI(object):
         self.docker = client
         self.docker.volumes.create(name=self.config_volume, driver='local')
 
-    def cli(self, arguments):
-        print(arguments)
+    def cli(self, arg):
+        if arg['incubator']:
+            if arg['start']:
+                print("Starting incubator", end=' ... ')
+                self.start_incubator()
+                print("[OK]")
+                return
+            if arg['stop']:
+                print("Stopping incubator", end=' ... ')
+                self.stop_incubator()
+                print("[OK]")
+                return
+        else:
+            print("NOT IMPLEMENTED")
+            print(arg)
 
     def start_incubator(self):
         volumes = {
@@ -48,7 +61,7 @@ class CLI(object):
             self.docker_endpoint: {'bind': '/var/run/docker.sock', 'mode': 'rw'},
         }
         ports = {'4000/tcp': 4000}
-        self.daemon = self.docker.containers.run(
+        self.docker.containers.run(
             self.incubator_img,
             detach=True,
             volumes=volumes,
