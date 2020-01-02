@@ -1,4 +1,4 @@
-from src.scheduler.scheduler import Scheduler
+from rallf.scheduler.scheduler import Scheduler
 
 
 class DeviceScheduler(Scheduler):

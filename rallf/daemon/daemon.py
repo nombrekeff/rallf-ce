@@ -4,12 +4,12 @@ import os
 import docker
 from werkzeug.wrappers import Request, Response
 from jsonrpc import JSONRPCResponseManager, dispatcher
-from src.model.tool import Tool
-from src.model.robot import Robot
-from src.model.task import Task
-from src.network_manager import NetworkManager
-from src.scheduler.device_scheduler import DeviceScheduler
-from src.scheduler.task_scheduler import TaskScheduler
+from rallf.model.tool import Tool
+from rallf.model.robot import Robot
+from rallf.model.task import Task
+from rallf.network_manager import NetworkManager
+from rallf.scheduler.device_scheduler import DeviceScheduler
+from rallf.scheduler.task_scheduler import TaskScheduler
 
 
 #   TODO:

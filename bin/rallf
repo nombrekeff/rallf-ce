@@ -2,7 +2,7 @@
 import docker
 from docopt import docopt
 
-from ..src.cli.cli import CLI
+from rallf.cli.cli import CLI
 
 if __name__ == '__main__':
     cli = CLI(docker.from_env())

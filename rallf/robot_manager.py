@@ -1,4 +1,4 @@
-from src.manager import Manager
+from rallf.manager import Manager
 
 
 class RobotManager(Manager):

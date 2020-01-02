@@ -1,5 +1,5 @@
-from src.model.identifiable import Identifiable
-from src.scheduler.task_scheduler import TaskScheduler
+from rallf.model.identifiable import Identifiable
+from rallf.scheduler.task_scheduler import TaskScheduler
 
 
 class Task(Identifiable):

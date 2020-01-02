@@ -2,8 +2,8 @@ from unittest import TestCase
 
 import docker
 
-from src.device_manager import DeviceManager
-from src.scheduler.device_scheduler import DeviceScheduler
+from rallf.device_manager import DeviceManager
+from rallf.scheduler.device_scheduler import DeviceScheduler
 
 
 class TestDevices(TestCase):

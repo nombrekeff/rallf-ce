@@ -1,6 +1,6 @@
-from src.model.tool import Tool
-from src.model.identifiable import Identifiable
-from src.model.task import Task
+from rallf.model.tool import Tool
+from rallf.model.identifiable import Identifiable
+from rallf.model.task import Task
 
 
 class Robot(Identifiable):

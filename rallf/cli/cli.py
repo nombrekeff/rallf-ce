@@ -1,5 +1,4 @@
 from docker import DockerClient
-from docopt import docopt
 
 
 class CLI(object):

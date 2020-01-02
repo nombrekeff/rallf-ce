@@ -1,6 +1,6 @@
-from src.model.robot import Robot
-from src.model.task import Task
-from src.scheduler.task_scheduler import TaskScheduler
+from rallf.model.robot import Robot
+from rallf.model.task import Task
+from rallf.scheduler.task_scheduler import TaskScheduler
 
 
 class Skill(Task):

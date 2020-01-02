@@ -1,5 +1,5 @@
-from src.manager import Manager
-from src.scheduler.scheduler import Scheduler
+from rallf.manager import Manager
+from rallf.scheduler.scheduler import Scheduler
 
 
 class DeviceManager(Manager):

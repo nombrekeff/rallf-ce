@@ -3,7 +3,7 @@ from unittest import TestCase
 
 import docker
 
-from src.cli.cli import CLI
+from rallf.cli.cli import CLI
 
 
 class TestCli(TestCase):

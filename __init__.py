@@ -1,1 +1,1 @@
-import src.cli
+import rallf.cli

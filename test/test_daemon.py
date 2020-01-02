@@ -1,7 +1,7 @@
 from unittest import TestCase
 
-from src.daemon.daemon import Daemon
-from src.model.robot import Robot
+from rallf.daemon.daemon import Daemon
+from rallf.model.robot import Robot
 
 
 class TestDaemon(TestCase):

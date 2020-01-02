@@ -1,7 +1,7 @@
 from docker import DockerClient
 from docker.models.networks import Network
 
-from src.manager import Manager
+from rallf.manager import Manager
 
 
 class NetworkManager(Manager):
