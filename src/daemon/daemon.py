@@ -4,7 +4,7 @@ import os
 import docker
 from werkzeug.wrappers import Request, Response
 from jsonrpc import JSONRPCResponseManager, dispatcher
-from src.model.device import Device
+from src.model.tool import Tool
 from src.model.robot import Robot
 from src.model.task import Task
 from src.network_manager import NetworkManager
@@ -25,15 +25,12 @@ class Daemon:
     devices_network_name = "rallf_devices_network"
 
     def __init__(self):
-        # TODO:
-        #   * load data from config volume
         file = self.config_file
         if not os.path.isfile(file): file += '.dist'
         with open(file, 'r') as f:
             config = json.load(f)
-            self.robots = [Robot(r['id']) for r in config['robots']]
-            self.devices = [Device(d['id']) for d in config['devices']]
-            self.skills = [Task(t['id']) for t in config['skills']]
+            self.robots = [Robot.load(r['id']) for r in config['robots']]
+            self.devices = [Tool.load(d['id']) for d in config['devices']]
         client = docker.from_env()
         self.network_manager = NetworkManager(client)
         tasks_network = self.network_manager.create(self.tasks_network_name)
@@ -44,8 +41,7 @@ class Daemon:
     def persist(self):
         config = {
             'robots': self.robots,
-            'devices': self.devices,
-            'skills': self.skills
+            'devices': self.devices
         }
         with open(self.config_file, 'w') as f:
             json.dump(config, f, default=lambda x: x.__dict__)
@@ -74,15 +70,15 @@ class Daemon:
     def skill_list(self, robot: Robot) -> list:
         return robot.skills[:]
 
-    def device_install(self, img, driver, port) -> Device:
-        d = Device(img=img)
+    def device_install(self, img, driver, port) -> Tool:
+        d = Tool(img=img)
         self.devices.append(d)
         return d
 
-    def device_uninstall(self, device: Device) -> None:
+    def device_uninstall(self, device: Tool) -> None:
         self.devices.remove(device)
 
-    def device_list(self, device: Device) -> list:
+    def device_list(self, device: Tool) -> list:
         return self.devices[:]
 
 

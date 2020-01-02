@@ -9,7 +9,7 @@ class CLI(object):
       rallf login [--username <username>] [--password <password>]
       rallf incubator (start | stop) [--endpoint <docker_endpoint>] [--persistent]
       rallf robot ls
-      rallf robot create [--faker]
+      rallf robot create
       rallf robot delete --robot <robot>
       rallf robot skill (learn | forget) <docker_image> --robot <robot>
       rallf robot device (add | remove) <docker_image> --robot <robot>

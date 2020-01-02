@@ -1,24 +1,31 @@
-from src.model.object import Object
+from src.model.tool import Tool
+from src.model.identifiable import Identifiable
 from src.model.task import Task
-from src.scheduler.task_scheduler import TaskScheduler
 
 
-class Robot(Object):
+class Robot(Identifiable):
+    home = None
     skills = []
+    tools = []
 
-    def __init__(self, scheduler: TaskScheduler, id=None):
-        super().__init__(id=None)
-        self.scheduler = scheduler
-        self.home = None
+    def __init__(self):
+        super().__init__()
 
     def die(self):
-        for skill in self.skills:
-            self.forget(skill)
+        for skill in self.skills: self.forget(skill)
+        for tool in self.tools: self.throw(tool)
 
     def learn(self, skill: Task):
         self.skills.append(skill)
-        skill.start(self.scheduler, self)
 
     def forget(self, skill: Task):
-        skill.stop()
         self.skills.remove(skill)
+
+    def use(self, tool: Tool):
+        self.tools.append(tool)
+
+    def throw(self, tool: Tool):
+        self.tools.remove(tool)
+
+    def load(self, src):
+        pass
