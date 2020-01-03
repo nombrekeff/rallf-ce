@@ -1,13 +1,13 @@
 # RALLF Community Edition (rallf-ce)
 
 
-[![Website](https://img.shields.io/website-up-down-green-red/https/api.rallf.com.svg?label=api)](https://rallf.com)
 [![GitHub license](https://img.shields.io/github/license/robotunion/rallf-python-sdk.svg)](https://github.com/RobotUnion/rallf-python-sdk/blob/master/LICENSE)
 [![GitHub issues](https://img.shields.io/github/issues/robotunion/rallf-python-sdk.svg)](https://github.com/robotunion/rallf-python-sdk/issues)
 [![PyPI](https://img.shields.io/pypi/v/rallf.svg)](https://pypi.org/pypi/rallf/)
 [![Python Versions](https://img.shields.io/pypi/pyversions/rallf.svg)](https://pypi.org/pypi/rallf/)
 [![Requirements Status](https://requires.io/github/RobotUnion/rallf-python-sdk/requirements.svg?branch=master)](https://requires.io/github/RobotUnion/rallf-ce/requirements/?branch=master)
-
+![Docker Pulls](https://img.shields.io/docker/pulls/rallf/incubator)
+![Docker Stars](https://img.shields.io/docker/stars/rallf/incubator)
 
 RALLF SDK provides the tools to create tasks for rallf robots (rallf.com) using python3.
 
@@ -80,7 +80,7 @@ rallf-py -h
 
 ### Task Manifest
 Task manifest is mandatory for rallf.com tasks, but not necessary for developing, visit [manifest reference](https://github.com/RobotUnion/rallf-js-sdk/wiki/Manifest) to learn more in-deep about task manifests.
-```js
+```json5
 /* File config/manifest.json */
 {
   "title": "Hello Task",
