@@ -9,5 +9,6 @@ RUN pip3 install json-rpc
 
 COPY . /incubator
 WORKDIR /incubator
+RUN pip3 install -e .
 
-CMD ["/usr/bin/python3", "/incubator/server.py"]
+CMD ["/usr/local/bin/rallfd"]

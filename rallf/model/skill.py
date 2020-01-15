@@ -1,6 +1,6 @@
 from rallf.model.robot import Robot
 from rallf.model.task import Task
-from rallf.scheduler.task_scheduler import TaskScheduler
+from rallf.scheduler.scheduler import Scheduler
 
 
 class Skill(Task):
@@ -11,5 +11,5 @@ class Skill(Task):
         super().__init__(id)
         self.img = img
 
-    def start(self, scheduler: TaskScheduler, robot: Robot):
+    def start(self, scheduler: Scheduler, robot: Robot):
         scheduler.start(self, robot)

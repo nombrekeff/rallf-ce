@@ -11,7 +11,7 @@ setuptools.setup(
       long_description_content_type="text/markdown",
       url="https://github.com/robotunion/rallf-ce",
       packages=setuptools.find_packages(),
-      scripts=['bin/rallf'],
+      scripts=['bin/rallf', 'bin/rallfd'],
       classifiers=[
             "Development Status :: 2 - Pre-Alpha",
             "Programming Language :: Python",

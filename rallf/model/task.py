@@ -1,12 +1,12 @@
 from rallf.model.identifiable import Identifiable
-from rallf.scheduler.task_scheduler import TaskScheduler
+from rallf.scheduler.scheduler import Scheduler
 
 
 class Task(Identifiable):
     container = None
     img = None
 
-    def __init__(self, task_scheduler: TaskScheduler, img=None, id=None):
+    def __init__(self, task_scheduler: Scheduler, img=None, id=None):
         super().__init__(id)
         self.task_scheduler = task_scheduler
         self.img = img
