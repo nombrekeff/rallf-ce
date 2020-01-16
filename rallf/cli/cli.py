@@ -1,3 +1,6 @@
+import random
+
+import requests
 from docker import DockerClient
 from docker.errors import NotFound
 
@@ -30,34 +33,75 @@ class CLI(object):
     config_volume = 'rallf_config'
     docker_endpoint = '/var/run/docker.sock'
     incubator_img = 'rallf/incubator:latest'
+    url = "http://localhost:4000"
     daemon = None
 
     def __init__(self, client: DockerClient):
         self.docker = client
         self.docker.volumes.create(name=self.config_volume, driver='local')
+        self.mapping = {
+            "incubator": {
+                "start": self.start_incubator,
+                "stop": self.stop_incubator,
+            },
+            "robot": {
+                "create": self.create_robot,
+                "delete": self.delete_robot,
+                "skill": {
+                    "learn": self.learn_skill,
+                    "forget": self.forget_skill,
+                }
+            }
+        }
 
-    def cli(self, arg):
-        if arg['incubator']:
-            try:
-                if arg['start']:
-                    print("Starting incubator", end=' ... ')
-                    self.start_incubator()
-                    print("[OK]")
-                    return
-                if arg['stop']:
-                    print("Stopping incubator", end=' ... ')
-                    self.stop_incubator()
-                    print("[OK]")
-                    return
-            except NameError as e:
-                print(e)
-            except NotFound:
-                print("Cannot stop incubator: incubator is not running")
-        else:
-            print("NOT IMPLEMENTED")
-            print(arg)
+    def cli(self, arg, mapping=None):
+        if mapping is None: mapping = self.mapping
+        for command in mapping.keys():
+            if command in arg and arg[command]:
+                submapping = mapping[command]
+                if isinstance(submapping, dict):
+                    return self.cli(arg, submapping)
+                else:
+                    try:
+                        print(submapping.__doc__, end="... ")
+                        result = submapping(arg)
+                        print("[OK]")
+                        return result
+                    except NameError as e:
+                        print("[ERROR] %s" % e)
+                return
 
-    def start_incubator(self):
+    def rpc_call(self, method, params=None):
+        if params is None: params = {}
+        reqid = random.randint(0, 100000000)
+        payload = {
+            "method": method,
+            "params": params,
+            "jsonrpc": 2.0,
+            "id": reqid
+        }
+        response = requests.post(self.url, json=payload).json()
+        assert response["id"] == reqid
+        return response["result"]
+
+    def create_robot(self, arg):
+        """Creating robot"""
+        return self.rpc_call("create_robot")
+
+    def delete_robot(self, arg):
+        """Deleting robot"""
+        return self.rpc_call("delete_robot", arg["<robot>"])
+
+    def learn_skill(self, arg):
+        """Learning robot skill"""
+        return self.rpc_call("learn_skill", arg["<robot>", "<docker_image>"])
+
+    def forget_skill(self, arg):
+        """Forgetting robot skill"""
+        return self.rpc_call("forget_skill", arg["<robot>", "<docker_image>"])
+
+    def start_incubator(self, arg):
+        """Starting incubator"""
         volumes = {
             self.config_volume: {'bind': '/config', 'mode': 'rw'},
             self.docker_endpoint: {'bind': '/var/run/docker.sock', 'mode': 'rw'},
@@ -66,7 +110,7 @@ class CLI(object):
 
         try:
             self.docker.containers.get('incubator')
-            raise NameError("Error: incubator is already running")
+            raise NameError("Incubator is already running")
         except NotFound:
             self.docker.containers.run(
                 self.incubator_img,
@@ -77,5 +121,9 @@ class CLI(object):
                 remove=True
             )
 
-    def stop_incubator(self):
-        self.docker.containers.get('incubator').kill()
+    def stop_incubator(self, arg):
+        """Stopping incubator"""
+        try:
+            self.docker.containers.get('incubator').kill()
+        except NotFound:
+            raise NameError("Incubator is not running")
