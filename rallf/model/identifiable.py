@@ -7,6 +7,3 @@ class Identifiable:
 
     def __str__(self):
         return self.id
-
-    def load(self, src):
-        pass

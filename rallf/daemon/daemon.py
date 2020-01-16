@@ -6,6 +6,9 @@ from werkzeug.wrappers import Request, Response
 from jsonrpc import JSONRPCResponseManager, dispatcher
 
 from rallf.manager.network_manager import NetworkManager
+from rallf.manager.robot_manager import RobotManager
+from rallf.model.exportable import Exportable
+from rallf.model.loadable import Loadable
 from rallf.scheduler.scheduler import Scheduler
 from rallf.model.robot import Robot
 from rallf.model.task import Task
@@ -17,41 +20,42 @@ from rallf.model.task import Task
 #           * robots data (list of robots in directories)
 #           * devices data (list of installed devices as docker images)
 #       * ...
-class Daemon:
+class Daemon(Loadable, Exportable):
 
     config_file = '../config/daemon.json'
     tasks_network_name = "rallf_tasks_network"
+    robot_manager = None
 
     def __init__(self):
         file = self.config_file
         if not os.path.isfile(file): file += '.dist'
         with open(file, 'r') as f:
             config = json.load(f)
-            self.robots = [Robot.load(r['id']) for r in config['robots']]
+            self.load(config)
         client = docker.from_env()
         self.network_manager = NetworkManager(client)
         tasks_network = self.network_manager.create(self.tasks_network_name)
 
         self.scheduler = Scheduler(client, tasks_network)
 
-    def persist(self):
+    def load(self, config):
+        self.robot_manager = RobotManager(config['robots'])
+
+    def export(self):
         config = {
-            'robots': self.robots,
+            'robots': self.robot_manager.export(),
         }
         with open(self.config_file, 'w') as f:
             json.dump(config, f, default=lambda x: x.__dict__)
 
     def robot_create(self) -> Robot:
-        r = Robot()
-        self.robots.append(r)
-        return r
+        return self.robot_manager.create()
 
     def robot_delete(self, robot: Robot):
-        robot.die()
-        self.robots.remove(robot)
+        self.robot_manager.delete(robot)
 
     def robot_list(self):
-        return self.robots[:]
+        return self.robot_manager.robots[:]
 
     def skill_train(self, img, robot: Robot) -> Task:
         t = Task(img=img)

@@ -11,8 +11,6 @@ class CLI(object):
       rallf robot create
       rallf robot delete --robot <robot>
       rallf robot skill (learn | forget) <docker_image> --robot <robot>
-      rallf robot device (add | remove) <docker_image> --robot <robot>
-      rallf device (install | uninstall) <docker_image> [--driver <driver>] [--port <port>]
       rallf --help
       rallf --version
 
@@ -22,8 +20,6 @@ class CLI(object):
       -p, --password <password>          rallf.com password or - to get it from stdin [default: -]
       -r, --robot <robot>                Robot to use
       --persistent                       Keep the action persistent across restarts
-      --port <port>                      TCP port to connect to, [default: 4444]
-      -d, --driver <driver>              Driver name [default: selenium]
       -h, --help                         Show this screen.
       -v, --version                      Show version.
 
