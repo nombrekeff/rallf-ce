@@ -1,4 +1,5 @@
 from docker import DockerClient
+from docker.errors import NotFound
 
 
 class CLI(object):
@@ -37,16 +38,21 @@ class CLI(object):
 
     def cli(self, arg):
         if arg['incubator']:
-            if arg['start']:
-                print("Starting incubator", end=' ... ')
-                self.start_incubator()
-                print("[OK]")
-                return
-            if arg['stop']:
-                print("Stopping incubator", end=' ... ')
-                self.stop_incubator()
-                print("[OK]")
-                return
+            try:
+                if arg['start']:
+                    print("Starting incubator", end=' ... ')
+                    self.start_incubator()
+                    print("[OK]")
+                    return
+                if arg['stop']:
+                    print("Stopping incubator", end=' ... ')
+                    self.stop_incubator()
+                    print("[OK]")
+                    return
+            except NameError as e:
+                print(e)
+            except NotFound:
+                print("Cannot stop incubator: incubator is not running")
         else:
             print("NOT IMPLEMENTED")
             print(arg)
@@ -57,16 +63,19 @@ class CLI(object):
             self.docker_endpoint: {'bind': '/var/run/docker.sock', 'mode': 'rw'},
         }
         ports = {'4000/tcp': 4000}
-        self.docker.containers.run(
-            self.incubator_img,
-            name="incubator",
-            detach=True,
-            volumes=volumes,
-            ports=ports,
-            remove=True
-        )
+
+        try:
+            self.docker.containers.get('incubator')
+            raise NameError("Error: incubator is already running")
+        except NotFound:
+            self.docker.containers.run(
+                self.incubator_img,
+                name="incubator",
+                detach=True,
+                volumes=volumes,
+                ports=ports,
+                remove=True
+            )
 
     def stop_incubator(self):
-        daemon = self.docker.containers.get('incubator')
-        if daemon is not None:
-            daemon.kill()
+        self.docker.containers.get('incubator').kill()
