@@ -14,10 +14,11 @@ class Scheduler:
         self.network_manager = network_manager
 
     def start(self, task: Task, robot: Robot):
-        task_home = "%s/tasks/%s" % (robot.home, task.id)
-        volumes = {task_home: {"bind": "/home/task", "mode": "rw"}}
+        task_home = "%s-%s" % (robot, task)
+        volumes = {task_home: {"bind": "/workspace", "mode": "rw"}}
         container = self.docker.containers.run(task.img, name=task.id, detach=True, volumes=volumes)
-        self.network_manager.create("%s-%s" % (robot, task)).connect(container, alias=[task.id])
+        network = self.network_manager.create("%s-%s" % (robot, task))
+        network.connect(container, alias=[task.id])
         self.running_tasks.append(container)
         return container
 

@@ -59,6 +59,7 @@ class CLI(object):
         ports = {'4000/tcp': 4000}
         self.docker.containers.run(
             self.incubator_img,
+            name="incubator",
             detach=True,
             volumes=volumes,
             ports=ports,
@@ -66,5 +67,6 @@ class CLI(object):
         )
 
     def stop_incubator(self):
-        if self.daemon is not None:
-            self.daemon.kill()
+        daemon = self.docker.containers.get('incubator')
+        if daemon is not None:
+            daemon.kill()

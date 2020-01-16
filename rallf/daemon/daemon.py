@@ -67,18 +67,14 @@ class Daemon(Loadable, Exportable):
     def skill_list(self, robot: Robot) -> list:
         return robot.skills[:]
 
-
-    @dispatcher.add_method
-    def robot_rpc(self, **kwargs):
-        return kwargs["username"] + kwargs["password"]
-
-    @dispatcher.add_method
-    def login(self, **kwargs):
-        return kwargs["username"] + kwargs["password"]
+    #@dispatcher.add_method
+    #def login(self, **kwargs):
+    #    return kwargs["username"] + kwargs["password"]
 
     @Request.application
     def application(self, request):
         # Dispatcher is dictionary {<method_name>: callable}
+        dispatcher["login"] = lambda s: "Login successful"
         dispatcher["echo"] = lambda s: s
         dispatcher["add"] = lambda a, b: a + b
 
