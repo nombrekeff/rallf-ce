@@ -2,6 +2,7 @@ import json
 import os
 
 import docker
+from docker import DockerClient
 from werkzeug.wrappers import Request, Response
 from jsonrpc import JSONRPCResponseManager, dispatcher
 
@@ -22,21 +23,18 @@ from rallf.model.task import Task
 #       * ...
 class Daemon(Loadable, Exportable):
 
-    config_file = '../config/daemon.json'
+    config_file = 'config/daemon.json'
     tasks_network_name = "rallf_tasks_network"
     robot_manager = None
 
-    def __init__(self):
+    def __init__(self, scheduler: Scheduler):
         file = self.config_file
         if not os.path.isfile(file): file += '.dist'
         with open(file, 'r') as f:
             config = json.load(f)
             self.load(config)
-        client = docker.from_env()
-        self.network_manager = NetworkManager(client)
-        tasks_network = self.network_manager.create(self.tasks_network_name)
 
-        self.scheduler = Scheduler(client, tasks_network)
+        self.scheduler = scheduler
 
     def load(self, config):
         self.robot_manager = RobotManager(config['robots'])

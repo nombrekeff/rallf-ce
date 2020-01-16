@@ -5,7 +5,10 @@ from rallf.model.robot import Robot
 
 class RobotManager(Loadable, Exportable):
 
-    def __init__(self, config):
+    def __init__(self, robots):
+        self.robots = robots
+
+    def load(self, config):
         self.robots = [Robot.load(r) for r in config]
 
     def create(self):

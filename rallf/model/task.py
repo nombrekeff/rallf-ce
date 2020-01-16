@@ -1,7 +1,6 @@
 from rallf.model.exportable import Exportable
 from rallf.model.identifiable import Identifiable
 from rallf.model.loadable import Loadable
-from rallf.scheduler.scheduler import Scheduler
 
 
 class Task(Identifiable, Loadable, Exportable):

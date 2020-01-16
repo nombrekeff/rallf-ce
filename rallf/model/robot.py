@@ -11,6 +11,9 @@ class Robot(Identifiable, Loadable, Exportable):
     def __init__(self):
         super().__init__()
 
+    def load(self, config):
+        pass
+
     def die(self):
         map(self.forget, self.skills)
 

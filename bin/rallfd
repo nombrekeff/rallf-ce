@@ -2,9 +2,11 @@ import docker
 from werkzeug.serving import run_simple
 
 from rallf.daemon.daemon import Daemon
-from rallf.manager.scheduler import Scheduler
+from rallf.manager.network_manager import NetworkManager
+from rallf.scheduler.scheduler import Scheduler
 
 if __name__ == '__main__':
-    scheduler = Scheduler(docker.from_env())
-    daemon = Daemon()
+    network_manager = NetworkManager(docker.from_env())
+    scheduler = Scheduler(docker.from_env(), network_manager)
+    daemon = Daemon(scheduler)
     run_simple('localhost', 4000, daemon.application)

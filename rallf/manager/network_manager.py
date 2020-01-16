@@ -1,10 +1,8 @@
 from docker import DockerClient
 from docker.models.networks import Network
 
-from rallf.manager import Manager
 
-
-class NetworkManager(Manager):
+class NetworkManager:
     def __init__(self, docker: DockerClient):
         self.docker = docker
 
