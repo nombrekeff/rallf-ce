@@ -1,4 +1,4 @@
 
 class Exportable:
     def export(self):
-        pass
+        return self.__dict__

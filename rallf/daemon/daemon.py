@@ -44,16 +44,17 @@ class Daemon(Loadable, Exportable):
             'robots': self.robot_manager.export(),
         }
         with open(self.config_file, 'w') as f:
-            json.dump(config, f, default=lambda x: x.__dict__)
+            json.dump(config, f, default=lambda x: x.export())
 
     def robot_create(self) -> Robot:
-        return self.robot_manager.create()
+        robot = self.robot_manager.create()
+        return robot.export()
 
-    def robot_delete(self, robot: Robot):
-        self.robot_manager.delete(robot)
+    def robot_delete(self, robot_id: str):
+        self.robot_manager.delete(robot_id)
 
     def robot_list(self):
-        return self.robot_manager.robots[:]
+        return [robot.export() for robot in self.robot_manager.robots]
 
     def skill_train(self, img, robot: Robot) -> Task:
         t = Task(img=img)
@@ -74,9 +75,13 @@ class Daemon(Loadable, Exportable):
     @Request.application
     def application(self, request):
         # Dispatcher is dictionary {<method_name>: callable}
-        dispatcher["login"] = lambda s: "Login successful"
-        dispatcher["echo"] = lambda s: s
-        dispatcher["add"] = lambda a, b: a + b
+        dispatcher = {
+            "login": lambda s: "Login successful",
+            "robot_list": self.robot_list,
+            "robot_create": self.robot_create,
+            "echo": lambda s: s,
+            "add": lambda a, b: a + b
+        }
 
         response = JSONRPCResponseManager.handle(
             request.data, dispatcher

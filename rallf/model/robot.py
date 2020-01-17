@@ -8,9 +8,6 @@ class Robot(Identifiable, Loadable, Exportable):
     home = None
     skills = []
 
-    def __init__(self):
-        super().__init__()
-
     def load(self, config):
         pass
 

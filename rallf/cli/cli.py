@@ -3,6 +3,7 @@ import pathlib
 import random
 import sys
 
+import yaml
 import requests
 from docker import DockerClient
 from docker.errors import NotFound
@@ -55,9 +56,9 @@ class CLI(object):
                 "stop": self.stop_incubator,
             },
             "robot": {
-                "ls": self.list_robots,
-                "create": self.create_robot,
-                "delete": self.delete_robot,
+                "ls": self.robot_list,
+                "create": self.robot_create,
+                "delete": self.robot_delete,
                 "skill": {
                     "learn": self.learn_skill,
                     "forget": self.forget_skill,
@@ -77,11 +78,11 @@ class CLI(object):
                         print(submapping.__doc__, end="... ")
                         result = submapping(arg)
                         print("[OK]")
-                        if result is not None:
-                            if isinstance(result, str): print(result)
-                            elif isinstance(result, list): print("\n".join(result))
-                            elif isinstance(result, dict):
-                                print(["%s: %s" % (key, result[key]) for key in result.keys()])
+                        if isinstance(result, dict) and result == {}:
+                            return result
+                        if isinstance(result, list) and result == []:
+                            return result
+                        print(yaml.dump(result))
                         return result
                     except RallfError as e:
                         print("[ERROR] %s" % e)
@@ -111,17 +112,17 @@ class CLI(object):
         password = sys.stdin.read().strip() if password == "-" else password
         return self.rpc_call("login", [{"username": username, "password": password}])
 
-    def list_robots(self, arg):
+    def robot_list(self, arg):
         """Listing robots"""
         self.get_incubator()
-        return self.rpc_call("list_robots")
+        return self.rpc_call("robot_list")
 
-    def create_robot(self, arg):
+    def robot_create(self, arg):
         """Creating robot"""
         self.get_incubator()
-        return self.rpc_call("create_robot")
+        return self.rpc_call("robot_create")
 
-    def delete_robot(self, arg):
+    def robot_delete(self, arg):
         """Deleting robot"""
         self.get_incubator()
         return self.rpc_call("delete_robot", arg["<robot>"])
