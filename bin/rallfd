@@ -9,4 +9,4 @@ if __name__ == '__main__':
     network_manager = NetworkManager(docker.from_env())
     scheduler = Scheduler(docker.from_env(), network_manager)
     daemon = Daemon(scheduler)
-    run_simple('localhost', 4000, daemon.application)
+    run_simple('0.0.0.0', 4000, daemon.application)

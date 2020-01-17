@@ -3,6 +3,7 @@ import random
 import requests
 from docker import DockerClient
 from docker.errors import NotFound
+from docker.models.containers import Container
 
 
 class CLI(object):
@@ -45,6 +46,7 @@ class CLI(object):
                 "stop": self.stop_incubator,
             },
             "robot": {
+                "ls": self.list_robots,
                 "create": self.create_robot,
                 "delete": self.delete_robot,
                 "skill": {
@@ -73,31 +75,40 @@ class CLI(object):
 
     def rpc_call(self, method, params=None):
         if params is None: params = {}
-        reqid = random.randint(0, 100000000)
+        request_id = random.randint(0, 100000000)
         payload = {
             "method": method,
             "params": params,
             "jsonrpc": 2.0,
-            "id": reqid
+            "id": request_id
         }
         response = requests.post(self.url, json=payload).json()
-        assert response["id"] == reqid
+        assert response["id"] == request_id
         return response["result"]
+
+    def list_robots(self, arg):
+        """Listing robots"""
+        self.get_incubator()
+        return self.rpc_call("list_robots")
 
     def create_robot(self, arg):
         """Creating robot"""
+        self.get_incubator()
         return self.rpc_call("create_robot")
 
     def delete_robot(self, arg):
         """Deleting robot"""
+        self.get_incubator()
         return self.rpc_call("delete_robot", arg["<robot>"])
 
     def learn_skill(self, arg):
         """Learning robot skill"""
+        self.get_incubator()
         return self.rpc_call("learn_skill", arg["<robot>", "<docker_image>"])
 
     def forget_skill(self, arg):
         """Forgetting robot skill"""
+        self.get_incubator()
         return self.rpc_call("forget_skill", arg["<robot>", "<docker_image>"])
 
     def start_incubator(self, arg):
@@ -123,7 +134,11 @@ class CLI(object):
 
     def stop_incubator(self, arg):
         """Stopping incubator"""
+        incubator = self.get_incubator()
+        incubator.kill()
+
+    def get_incubator(self) -> Container:
         try:
-            self.docker.containers.get('incubator').kill()
+            return self.docker.containers.get('incubator')
         except NotFound:
             raise NameError("Incubator is not running")
