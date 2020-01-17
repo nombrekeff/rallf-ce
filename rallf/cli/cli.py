@@ -78,10 +78,8 @@ class CLI(object):
                         print(submapping.__doc__, end="... ")
                         result = submapping(arg)
                         print("[OK]")
-                        if isinstance(result, dict) and result == {}:
-                            return result
-                        if isinstance(result, list) and result == []:
-                            return result
+                        if isinstance(result, dict) and result == {}: return result
+                        if isinstance(result, list) and result == []: return result
                         print(yaml.dump(result))
                         return result
                     except RallfError as e:
