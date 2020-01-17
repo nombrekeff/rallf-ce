@@ -52,6 +52,7 @@ class Daemon(Loadable, Exportable):
 
     def robot_delete(self, robot_id: str):
         self.robot_manager.delete(robot_id)
+        return "Robot deleted successfully"
 
     def robot_list(self):
         return [robot.export() for robot in self.robot_manager.robots]
@@ -79,6 +80,7 @@ class Daemon(Loadable, Exportable):
             "login": lambda s: "Login successful",
             "robot_list": self.robot_list,
             "robot_create": self.robot_create,
+            "robot_delete": self.robot_delete,
             "echo": lambda s: s,
             "add": lambda a, b: a + b
         }

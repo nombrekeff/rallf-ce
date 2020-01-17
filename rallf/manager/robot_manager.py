@@ -5,17 +5,18 @@ from rallf.model.robot import Robot
 
 class RobotManager(Loadable, Exportable):
 
-    def __init__(self, robots):
+    def __init__(self, robots: dict):
         self.robots = robots
 
     def load(self, config):
-        self.robots = [Robot.load(r) for r in config]
+        self.robots = [{r.id: r} for r in [Robot.load(c) for c in config]]
 
     def create(self):
         r = Robot()
-        self.robots.append(r)
+        self.robots[r.id] = r
         return r
 
-    def delete(self, robot: Robot):
-        self.robots.remove(robot)
-        robot.die()
+    def delete(self, robot_id: str):
+        r = self.robots[robot_id]
+        del self.robots[robot_id]
+        r.die()

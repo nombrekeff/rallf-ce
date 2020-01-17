@@ -123,7 +123,7 @@ class CLI(object):
     def robot_delete(self, arg):
         """Deleting robot"""
         self.get_incubator()
-        return self.rpc_call("delete_robot", arg["<robot>"])
+        return self.rpc_call("robot_delete", [arg["--robot"]])
 
     def learn_skill(self, arg):
         """Learning robot skill"""
