@@ -5,6 +5,10 @@ from docker import DockerClient
 from docker.errors import NotFound
 from docker.models.containers import Container
 
+from rallf.error.cli_error import CLIError
+from rallf.error.rallf_error import RallfError
+from rallf.error.rpc_error import RPCError
+
 
 class CLI(object):
     """Rallf CLI.
@@ -69,7 +73,7 @@ class CLI(object):
                         result = submapping(arg)
                         print("[OK]")
                         return result
-                    except NameError as e:
+                    except RallfError as e:
                         print("[ERROR] %s" % e)
                 return
 
@@ -84,6 +88,9 @@ class CLI(object):
         }
         response = requests.post(self.url, json=payload).json()
         assert response["id"] == request_id
+        if "error" in response:
+            raise RPCError(response["error"]["message"])
+        assert "result" in response
         return response["result"]
 
     def list_robots(self, arg):
@@ -121,7 +128,7 @@ class CLI(object):
 
         try:
             self.docker.containers.get('incubator')
-            raise NameError("Incubator is already running")
+            raise CLIError("Incubator is already running")
         except NotFound:
             self.docker.containers.run(
                 self.incubator_img,
@@ -141,4 +148,4 @@ class CLI(object):
         try:
             return self.docker.containers.get('incubator')
         except NotFound:
-            raise NameError("Incubator is not running")
+            raise CLIError("Incubator is not running")

@@ -1,0 +1,3 @@
+
+class RallfError(Exception):
+    pass
