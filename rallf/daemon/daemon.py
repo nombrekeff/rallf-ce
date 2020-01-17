@@ -67,9 +67,9 @@ class Daemon(Loadable, Exportable):
     def skill_list(self, robot: Robot) -> list:
         return robot.skills[:]
 
-    #@dispatcher.add_method
-    #def login(self, **kwargs):
-    #    return kwargs["username"] + kwargs["password"]
+    @dispatcher.add_method
+    def echo2(self, **kwargs):
+        return kwargs
 
     @Request.application
     def application(self, request):

@@ -1,4 +1,5 @@
 import getpass
+import pathlib
 import random
 import sys
 
@@ -17,7 +18,7 @@ class CLI(object):
 
     Usage:
       rallf login [--username <username>] [--password <password>]
-      rallf incubator (start | stop) [--endpoint <docker_endpoint>] [--persistent]
+      rallf incubator (start | stop) [--endpoint <docker_endpoint>] [--persistent] [--dev]
       rallf robot ls
       rallf robot create
       rallf robot delete --robot <robot>
@@ -31,6 +32,7 @@ class CLI(object):
       -p, --password <password>          rallf.com password, use "-" to get it from stdin
       -r, --robot <robot>                Robot to use
       --persistent                       Keep the action persistent across restarts
+      -d, --dev                          Run incubator in developer mode
       -h, --help                         Show this screen.
       -v, --version                      Show version.
 
@@ -75,7 +77,11 @@ class CLI(object):
                         print(submapping.__doc__, end="... ")
                         result = submapping(arg)
                         print("[OK]")
-                        print("\n".join(result) if isinstance(result, list) else result)
+                        if result is not None:
+                            if isinstance(result, str): print(result)
+                            elif isinstance(result, list): print("\n".join(result))
+                            elif isinstance(result, dict):
+                                print(["%s: %s" % (key, result[key]) for key in result.keys()])
                         return result
                     except RallfError as e:
                         print("[ERROR] %s" % e)
@@ -136,6 +142,12 @@ class CLI(object):
             self.config_volume: {'bind': '/config', 'mode': 'rw'},
             self.docker_endpoint: {'bind': '/var/run/docker.sock', 'mode': 'rw'},
         }
+
+        env = {}
+        if arg["--dev"]:
+            pwd = pathlib.Path().absolute()
+            volumes[pwd] = {"bind": '/incubator', 'mode': 'ro'}
+            env['DEBUG'] = "yes"
         ports = {'4000/tcp': 4000}
 
         try:
@@ -147,6 +159,7 @@ class CLI(object):
                 name="incubator",
                 detach=True,
                 volumes=volumes,
+                environment=env,
                 ports=ports,
                 remove=True
             )
