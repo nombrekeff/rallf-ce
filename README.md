@@ -1,5 +1,16 @@
-# RALLF Community Edition (rallf-ce)
+# 
+<p align="center">
+  <a href="http://rallf.com">
+    <img src="https://avatars2.githubusercontent.com/u/24513128?s=200&v=4" height="100">
+  </a>
+</p>
+<h1 align="center">RALLF Community Edition (rallf-ce)</h1>
 
+<div align="center">
+  <p>RALLF SDK provides the tools to create tasks for rallf robots (rallf.com) using python3.</p>
+</div>
+
+****
 
 [![GitHub license](https://img.shields.io/github/license/robotunion/rallf-python-sdk.svg)](https://github.com/RobotUnion/rallf-python-sdk/blob/master/LICENSE)
 [![GitHub issues](https://img.shields.io/github/issues/robotunion/rallf-python-sdk.svg)](https://github.com/robotunion/rallf-python-sdk/issues)
@@ -9,7 +20,6 @@
 ![Docker Pulls](https://img.shields.io/docker/pulls/rallf/incubator)
 ![Docker Stars](https://img.shields.io/docker/stars/rallf/incubator)
 
-RALLF SDK provides the tools to create tasks for rallf robots (rallf.com) using python3.
 
 **Disclaimer! This package is in development stage (unstable), it may be potentially buggy**
 
